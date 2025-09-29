@@ -1,55 +1,248 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
+  <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบลงเวลาแหลมทองกิจเกษตร</title>
   
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://ajax.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://semicon.github.io; font-src 'self' https://semicon.github.io; img-src 'self' https://img5.pic.in.th data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  
+  <title>ระบบลงเวลาแหลมทองกิจเกษตร</title>
+
   <!-- CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
-  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <!-- Fonts & Style -->
   <style>
-    @font-face { font-family: 'Digital dream Fat'; src: url('https://semicon.github.io/fonts/DigitaldreamFat.woff2') format('woff2'); }
-    :root { --primary-color: #28a745; --secondary-color: #f1c40f; --dark-color: #2c3e50; --border-radius: 8px; --box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
-    body { font-size: 1.05rem; min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #e8f5e9; padding: 15px; }
-    .wrapper { background: white; width: 100%; max-width: 400px; padding: 25px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); border-top: 5px solid var(--primary-color); }
-    .site-logo { width: auto; height: 80px; margin-bottom: 15px; }
-    .company-name { font-weight: 700; font-size: 1.8rem; margin: 0 0 15px; color: var(--dark-color); }
-    .msgBg { background: #f8f9fa; color: var(--dark-color); border: 1px solid #dee2e6; padding: 12px; border-radius: var(--border-radius); font-weight: 500; }
-    .clock-container { background: #333; padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px; }
-    .clock { font-family: 'Digital dream Fat', monospace; font-size: 2.5rem; color: #0f0; text-shadow: 0 0 10px #0f0; letter-spacing: 3px; text-align: center; }
-    .btn-action { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-    .btn { height: 50px; border-radius: var(--border-radius); font-weight: 500; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; border: none; }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn i { margin-right: 8px; }
-    .btn-clockin { background-color: var(--primary-color); color: white; }
-    .btn-clockout { background-color: var(--secondary-color); color: #212529; }
-    .alert { min-height: 50px; display: flex; align-items: center; justify-content: center; text-align: center; }
+    @font-face {
+      font-family: 'Digital dream Fat';
+      src: url('https://semicon.github.io/fonts/DigitaldreamFat.woff2')  format('woff2'),
+           url('https://semicon.github.io/fonts/DigitaldreamFat.woff')  format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --primary-color: #28a745;
+      --secondary-color: #f1c40f;
+      --accent-color: #3498db;
+      --dark-color: #2c3e50;
+      --light-color: #f8f9fa;
+      --danger-color: #e74c3c;
+      --text-color: #333;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'K2D', 'Kanit', sans-serif;
+    }
+
+    body {
+      font-size: 1.05rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #a4f8ab;
+      background-size: cover;
+      color: var(--text-color);
+      padding: 15px;
+    }
+
+    .site-logo {
+      width: auto; height: 80px; margin-bottom: 15px;
+    }
+
+    .company-name {
+      font-family: 'Kanit', sans-serif;
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin: 0 0 15px;
+      color: var(--dark-color);
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.7);
+    }
+
+    .msgBg {
+      background: linear-gradient(135deg, #67B26F, #4ca2cd);
+      color: white; text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+      padding: 12px; border-radius: var(--border-radius);
+      font-weight: 500;
+    }
+
+    .wrapper {
+      background: rgba(255, 255, 255, 0.92); width: 100%; max-width: 400px;
+      padding: 25px; border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+
+    .clock-container {
+      background: #f8f9fa; padding: 15px; border-radius: var(--border-radius);
+      margin-bottom: 20px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .clock {
+      font-family: 'Digital dream Fat'; font-size: 2rem; color: #000;
+      letter-spacing: 3px; text-shadow: 1px 1px 2px rgba(0, 128, 0, 0.5), 0 0 15px rgba(0, 128, 0, 0.3);
+      background: linear-gradient(to bottom, #e9ecef, #dee2e6);
+      padding: 10px 8px; border: 2px solid #adb5bd; border-radius: 5px;
+      display: inline-block; min-width: 90%; text-align: center;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    .form-group { margin-bottom: 20px; }
+
+    label {
+      font-weight: 500; display: block; margin-bottom: 8px;
+      color: var(--dark-color);
+    }
+
+    .form-control {
+      height: 45px; border-radius: var(--border-radius);
+      border: 1px solid #ced4da; padding: 0.5rem 1rem;
+    }
+
+    .btn-action {
+      display: flex; 
+      gap: 10px; 
+      margin-bottom: 20px;
+      flex-wrap: nowrap;
+    }
+
+    .btn {
+      height: 45px; 
+      border-radius: var(--border-radius);
+      font-weight: 500; 
+      display: flex;
+      align-items: center; 
+      justify-content: center;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+
+    .btn-clockin {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .btn-clockin:hover {
+      background-color: #1e7e34;
+      transform: scale(1.05);
+    }
+
+    .btn-clockout {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color); 
+      color: #212529;
+    }
+
+    .btn-clockout:hover {
+      background-color: #d39e00;
+      transform: scale(1.05);
+    }
+
+    .alert {
+      padding: 15px; border-radius: var(--border-radius);
+      margin-bottom: 0; min-height: 60px; display: flex;
+      align-items: center; justify-content: center;
+      text-align: center;
+    }
+
+    .alert-info {
+      background-color: #d1ecf1; border-color: #bee5eb;
+      color: #0c5460;
+    }
+
+    .notification-icon { margin-right: 8px; }
+
+    @media (max-width: 575.98px) {
+      .wrapper { padding: 20px 15px; }
+      .company-name { font-size: 1.6rem; }
+      .clock { font-size: 1.8rem; min-width: 95%; }
+      .btn-action { flex-direction: row; }
+    }
+
+    .swal2-popup-custom .swal2-html-container {
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    
+    .connection-status {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .connection-status i {
+      font-size: 16px;
+    }
+    
+    .connection-status.online {
+      background-color: #28a745;
+      color: white;
+    }
+    
+    .connection-status.offline {
+      background-color: #dc3545;
+      color: white;
+    }
   </style>
 </head>
 
 <body>
   <div class="wrapper">
     <div class="text-center">
-      <img src="https://img5.pic.in.th/file/secure-sv1/7088b986100a839eee3df494134be747.png" alt="แหลมทองกิจเกษตร" class="site-logo">
+      <img src="https://img5.pic.in.th/file/secure-sv1/7088b986100a839eee3df494134be747.png"  alt="แหลมทองกิจเกษตร" class="site-logo">
       <h1 class="company-name">แหลมทองกิจเกษตร</h1>
     </div>
-    <div class="clock-container">
-      <div id="MyClockDisplay" class="clock">00:00:00</div>
+    <div class="clock-container text-center">
+      <div id="MyClockDisplay" class="clock"></div>
     </div>
-    <form id="myForm" onsubmit="return false;">
-      <div class="form-group mb-3">
-        <label for="employee" class="form-label">👤 ชื่อพนักงาน</label>
-        <select class="form-control" id="employee" style="width: 100%;"></select>
+    <form id="myForm">
+      <div class="form-group">
+        <label for="employee">
+          👤 ชื่อพนักงาน
+        </label>
+        <select class="form-control select2" id="employee">
+          <option value="" disabled selected>กำลังโหลดรายชื่อ...</option>
+        </select>
       </div>
       <div class="btn-action">
-        <button type="button" class="btn btn-clockin" id="clockInBtn"><i class="fas fa-sign-in-alt"></i>เข้างาน</button>
-        <button type="button" class="btn btn-clockout" id="clockOutBtn"><i class="fas fa-sign-out-alt"></i>เลิกงาน</button>
+        <button type="button" class="btn btn-clockin" onclick="ClockIn()">
+          🟢 เข้างาน
+        </button>
+        <button type="button" class="btn btn-clockout" onclick="ClockOut()">
+          🔴 เลิกงาน
+        </button>
       </div>
       <div class="form-group">
         <div class="alert msgBg" role="alert" id="message"></div>
@@ -57,213 +250,372 @@
     </form>
   </div>
 
-  <!-- JavaScript Libraries -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js"></script>
-
   <script>
-    const App = (() => {
-      const config = {
-        webAppUrl: 'YOUR_WEB_APP_URL_HERE', // <-- !!! ใส่ URL ของคุณที่นี่ !!!
-        cacheDuration: 300000,
-      };
+    // =========================================================================
+    // == CONFIGURATION: กรุณาใส่ URL ของ Web App ที่ได้จากการ Deploy ที่นี่ ==
+    // =========================================================================
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQETxqoLA6CfSXU0AvEnUjGdqZP2Huq6ueuYiJoXcnsbFCvLd2MRtbrEEJOZMdIFNN/exec'; // <--- ★★★★★ ใส่ URL ที่นี่ ★★★★★
+    // =========================================================================
 
-      const state = {
-        employeeCache: null,
-        lastFetch: 0,
-        isFetching: false,
-        isClocking: false,
-      };
+    // Configuration
+    const APP_CONFIG = {
+      maxAttempts: 5,
+      lockoutDuration: 3600000,
+      sessionTimeout: 1800000,
+      employeeCacheDuration: 300000,
+      lastEmployeeFetch: 0,
+      employeeCache: null,
+      apiTimeout: 15000, // Increased timeout to 15s
+      isFetching: false,
+      pendingRequests: []
+    };
 
-      const elements = {
-        employeeSelect: $('#employee'),
-        clockInBtn: $('#clockInBtn'),
-        clockOutBtn: $('#clockOutBtn'),
-        message: $('#message'),
-        clockDisplay: $('#MyClockDisplay'),
-      };
+    let attemptCount = 0;
+    let lastAttemptTime = 0;
+    let sessionStartTime = Date.now();
 
-      async function callApi(action, params = {}) {
-        if (!config.webAppUrl || config.webAppUrl === 'https://www.google.com/url?sa=E&q=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbzQETxqoLA6CfSXU0AvEnUjGdqZP2Huq6ueuYiJoXcnsbFCvLd2MRtbrEEJOZMdIFNN%2Fexec') {
-          throw new Error("กรุณาตั้งค่า Web App URL ในไฟล์ HTML ก่อน");
+    function checkSession() {
+      if (Date.now() - sessionStartTime > APP_CONFIG.sessionTimeout) {
+        showNotification('<i class="fas fa-exclamation-triangle notification-icon"></i> เซสชันหมดเวลา กรุณาโหลดหน้าเว็บใหม่');
+        return false;
+      }
+      return true;
+    }
+
+    function checkRateLimit() {
+      const currentTime = Date.now();
+      if (currentTime - lastAttemptTime > APP_CONFIG.lockoutDuration) {
+        attemptCount = 0;
+      }
+      if (attemptCount >= APP_CONFIG.maxAttempts) {
+        const remainingTime = Math.ceil((APP_CONFIG.lockoutDuration - (currentTime - lastAttemptTime)) / 60000);
+        showNotification(`<i class="fas fa-ban notification-icon"></i> คุณถูกจำกัดการใช้งาน กรุณารอ ${remainingTime} นาที`);
+        return false;
+      }
+      attemptCount++;
+      lastAttemptTime = currentTime;
+      return true;
+    }
+
+    function sanitizeInput(input) {
+      if (typeof input !== 'string') return '';
+      return input.replace(/[<>\"'&]/g, match => ({'<': '&lt;','>': '&gt;','"': '&quot;',"'": '&#39;','&': '&amp;'}[match]));
+    }
+
+    function validateGPS(gps) {
+      if (!Array.isArray(gps) || gps.length !== 2) return false;
+      const [lat, lng] = gps;
+      if (typeof lat !== 'number' || typeof lng !== 'number' || isNaN(lat) || isNaN(lng)) return false;
+      if (lat < 5.5 || lat > 20.5 || lng < 97.0 || lng > 106.0) {
+        console.warn('GPS coordinates outside Thailand range');
+        return false;
+      }
+      return true;
+    }
+
+    const connectionStatus = document.createElement('div');
+    connectionStatus.className = 'connection-status';
+    document.body.appendChild(connectionStatus);
+    
+    function updateConnectionStatus() {
+      const isOnline = navigator.onLine;
+      if (isOnline) {
+        connectionStatus.className = 'connection-status online';
+        connectionStatus.innerHTML = '<i class="fas fa-wifi"></i> ออนไลน์';
+      } else {
+        connectionStatus.className = 'connection-status offline';
+        connectionStatus.innerHTML = '<i class="fas fa-wifi-slash"></i> ออฟไลน์';
+      }
+      return isOnline;
+    }
+    
+    window.addEventListener('online', () => {
+        updateConnectionStatus();
+        if (Date.now() - APP_CONFIG.lastEmployeeFetch > APP_CONFIG.employeeCacheDuration) {
+            getEmployees(true);
         }
-        try {
-          const response = await fetch(config.webAppUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action, params }),
-            redirect: 'follow'
-          });
-          if (!response.ok) throw new Error(`เกิดข้อผิดพลาดจากเซิร์ฟเวอร์ (Status: ${response.status})`);
-          const result = await response.json();
-          if (result.status === 'error') throw new Error(result.message);
-          return result.data;
-        } catch (error) {
-          console.error("API Call Error:", error);
-          if (error.message.includes('Failed to fetch')) {
-            throw new Error('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาตรวจสอบอินเทอร์เน็ต');
-          }
-          throw error;
+    });
+    window.addEventListener('offline', updateConnectionStatus);
+
+    function formatEmployee(employee) { return !employee.id ? employee.text : $('<span>').text(employee.text); }
+    function formatEmployeeSelection(employee) { return !employee.id ? employee.text : $('<span>').text(employee.text); }
+    
+    $(document).ready(function () {
+      document.getElementById('message').innerHTML = '☀️ ขอให้ทำงานอย่างมีความสุข';
+      updateConnectionStatus();
+      
+      getEmployees().then(() => {
+        const savedEmployee = localStorage.getItem('selectedEmployee');
+        if (savedEmployee) {
+          $('.select2').val(savedEmployee).trigger('change');
         }
+      });
+    });
+
+    function isCacheValid() {
+      return APP_CONFIG.employeeCache && (Date.now() - APP_CONFIG.lastEmployeeFetch) < APP_CONFIG.employeeCacheDuration;
+    }
+    
+    async function apiFetch(action, payload = null) {
+      if (SCRIPT_URL === 'YOUR_WEB_APP_URL_HERE') {
+        throw new Error('กรุณาตั้งค่า SCRIPT_URL ในไฟล์ index.html ก่อน');
       }
       
-      // ======================================================================
-      // START: ส่วนที่แก้ไขเรื่อง Dropdown ไม่แสดงผล
-      // ======================================================================
-      function updateEmployeeList(employees) {
-        // ดึงค่าที่เคยเลือกไว้ (ถ้ามี)
-        const savedEmployee = localStorage.getItem('selectedEmployee');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), APP_CONFIG.apiTimeout);
 
-        // เคลียร์ Dropdown เดิม
-        elements.employeeSelect.empty();
-        
-        // เพิ่ม Placeholder เริ่มต้น
-        elements.employeeSelect.append(new Option('พิมพ์เพื่อค้นหาพนักงาน...', '', true, true)).prop('disabled', true);
-
-        // เพิ่มรายชื่อพนักงานที่ดึงมาได้
-        if (Array.isArray(employees) && employees.length > 0) {
-            employees.forEach(item => {
-                const name = item[0] ? item[0].trim() : '';
-                if (name) {
-                    // สร้าง Option object และเช็คว่าตรงกับค่าที่เคยบันทึกไว้หรือไม่
-                    const option = new Option(name, name, false, name === savedEmployee);
-                    elements.employeeSelect.append(option);
-                }
-            });
-        }
-        
-        // สั่งให้ Select2 อัปเดตการแสดงผล และเปิดใช้งาน Dropdown
-        elements.employeeSelect.prop('disabled', false).trigger('change');
-      }
-      // ======================================================================
-      // END: ส่วนที่แก้ไข
-      // ======================================================================
-
-      async function getEmployees(forceRefresh = false) {
-        const now = Date.now();
-        if (!forceRefresh && state.employeeCache && (now - state.lastFetch < config.cacheDuration)) {
-          updateEmployeeList(state.employeeCache);
-          return;
-        }
-        if (state.isFetching) return;
-
-        state.isFetching = true;
-        ui.showLoading(true);
-
-        try {
-          const data = await callApi('getEmployees');
-          const safeData = Array.isArray(data) ? data : [];
-          state.lastFetch = now;
-          state.employeeCache = safeData;
-          updateEmployeeList(safeData); // <--- เรียกใช้ฟังก์ชันที่แก้ไขแล้ว
-        } catch (error) {
-          ui.showNotification(`⚠️ ไม่สามารถโหลดข้อมูลพนักงาน: ${error.message}`);
-        } finally {
-          state.isFetching = false;
-          ui.showLoading(false);
-        }
-      }
-
-      async function handleClocking(action, actionText) {
-        if (state.isClocking) return;
-        const employee = DOMPurify.sanitize(elements.employeeSelect.val());
-        if (!employee) {
-          ui.showNotification('🚫🧑 กรุณาเลือกรายชื่อพนักงาน');
-          return;
-        }
-        state.isClocking = true;
-        ui.toggleButtons(false);
-        try {
-          ui.showLoading('<i class="fas fa-map-marker-alt"></i> กำลังค้นหาตำแหน่ง...');
-          const position = await getGpsLocation();
-          const gps = [position.coords.latitude, position.coords.longitude];
-          ui.showLoading('<i class="fas fa-save"></i> กำลังบันทึกข้อมูล...');
-          const result = await callApi(action, { employee, gps });
-          result.forEach(item => {
-            if (item[0] === 'SUCCESS') {
-              ui.showPopup(employee, item[1], actionText, item[3]);
-            } else {
-              ui.showNotification(`⚠️ ${item[2]} ${item[0]}`);
-            }
-          });
-        } catch (error) {
-          if (error.code >= 1 && error.code <= 5) {
-            handleGpsError(error);
-          } else {
-            ui.showNotification(`⚠️ เกิดข้อผิดพลาด: ${error.message}`);
-          }
-        } finally {
-          state.isClocking = false;
-          ui.toggleButtons(true);
-          ui.showLoading(false);
-        }
-      }
-
-      function getGpsLocation() {
-        // ... (โค้ดส่วนนี้เหมือนเดิม)
-        const ACCEPTABLE_ACCURACY = 100;
-        return new Promise((resolve, reject) => {
-          if (!navigator.geolocation) return reject({ code: 4, message: "เบราว์เซอร์ไม่รองรับ Geolocation" });
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              if (position.coords.accuracy > ACCEPTABLE_ACCURACY) return reject({ code: 5, message: `ความแม่นยำ (${Math.round(position.coords.accuracy)} ม.) ไม่เพียงพอ` });
-              resolve(position);
-            },
-            (error) => reject(error),
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-          );
+      let response;
+      if (payload) { // POST request
+        response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'cors',
+          signal: controller.signal,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action, ...payload })
+        });
+      } else { // GET request
+        response = await fetch(`${SCRIPT_URL}?action=${action}`, {
+          method: 'GET',
+          mode: 'cors',
+          signal: controller.signal,
         });
       }
 
-      function handleGpsError(err) {
-        // ... (โค้ดส่วนนี้เหมือนเดิม)
+      clearTimeout(timeoutId);
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+      return await response.json();
+    }
+
+    async function getEmployees(forceRefresh = false) {
+      if (!forceRefresh && isCacheValid()) {
+        updateEmployeeList(APP_CONFIG.employeeCache);
+        return Promise.resolve(APP_CONFIG.employeeCache);
+      }
+
+      if (APP_CONFIG.isFetching) return;
+      APP_CONFIG.isFetching = true;
+      showLoading(true);
+
+      try {
+        const result = await apiFetch('getEmployees');
+        if (result.status === 'success' && Array.isArray(result.data)) {
+          const employees = result.data;
+          APP_CONFIG.lastEmployeeFetch = Date.now();
+          APP_CONFIG.employeeCache = employees;
+          updateEmployeeList(employees); // This now also initializes Select2
+          return employees;
+        } else {
+          throw new Error(result.message || 'Invalid data format from server');
+        }
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+        showNotification('⚠️ ไม่สามารถโหลดข้อมูลพนักงานได้ กรุณาลองใหม่ภายหลัง');
+        if (Array.isArray(APP_CONFIG.employeeCache)) {
+          updateEmployeeList(APP_CONFIG.employeeCache); // show stale data if available
+        }
+        return [];
+      } finally {
+        APP_CONFIG.isFetching = false;
+        showLoading(false);
+      }
+    }
+    
+    function updateEmployeeList(employees) {
+      if (!Array.isArray(employees)) return;
+
+      const employeeSelect = $("#employee");
+      const currentValue = employeeSelect.val();
+
+      // Destroy existing Select2 instance to re-initialize it correctly
+      if (employeeSelect.hasClass('select2-hidden-accessible')) {
+          employeeSelect.select2('destroy');
+      }
+
+      employeeSelect.empty().append('<option value="" disabled selected>พิมพ์เพื่อค้นหาพนักงาน...</option>');
+      
+      const newOptions = employees
+        .filter(item => item && item[0] && item[0].trim() !== '')
+        .map(item => ({
+          value: item[0].trim(),
+          text: item[0].trim()
+        }));
+
+      newOptions.forEach(option => {
+        employeeSelect.append(new Option(option.text, option.value));
+      });
+      
+      // Initialize Select2 AFTER the options have been added to the DOM
+      initSelect2(employeeSelect);
+      
+      // Restore the previous selection if it exists in the new list
+      if (currentValue && newOptions.some(opt => opt.value === currentValue)) {
+          employeeSelect.val(currentValue).trigger('change');
+      }
+    }
+    
+    function initSelect2(element) {
+      element.select2({
+        theme: 'bootstrap-5',
+        placeholder: 'พิมพ์ชื่อพนักงานเพื่อค้นหา...',
+        allowClear: true,
+        width: '100%',
+        minimumInputLength: 1,
+        language: {
+          noResults: () => 'ไม่พบพนักงานที่ค้นหา',
+          searching: () => 'กำลังค้นหา...',
+          inputTooShort: (args) => `กรุณาพิมพ์อย่างน้อย ${args.minimum} ตัวอักษร`,
+          errorLoading: () => 'เกิดข้อผิดพลาดในการโหลดข้อมูล',
+        },
+        templateResult: formatEmployee,
+        templateSelection: formatEmployeeSelection,
+        escapeMarkup: (markup) => markup
+      });
+    }
+
+    function showLoading(show) {
+      const messageEl = $('#message');
+      if (show) {
+        messageEl.html('<div class="d-flex align-items-center"><span class="spinner-border spinner-border-sm text-light me-2"></span> โปรดรอสักครู่...</div>');
+        messageEl.removeClass("msgBg").addClass("alert-info");
+      } else {
+        messageEl.html('☀️ ขอให้ทำงานอย่างมีความสุข');
+        messageEl.removeClass("alert-info").addClass("msgBg");
+      }
+    }
+
+    async function handleClocking(action) {
+        if (!checkSession() || !checkRateLimit()) return;
+        
+        const employeeEl = document.getElementById("employee");
+        if (!employeeEl || !employeeEl.value) {
+            showNotification('🚫🧑 กรุณาเลือกรายชื่อพนักงาน');
+            return;
+        }
+
+        const employee = sanitizeInput(employeeEl.value);
+        showLoading(true);
+
+        try {
+            const gps = await getlocation();
+            if (!validateGPS(gps)) {
+                showNotification('📍 ตำแหน่ง GPS ไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
+                showLoading(false);
+                return;
+            }
+
+            const result = await apiFetch(action, { employee, gps });
+            showLoading(false);
+
+            if (result.status === 'SUCCESS') {
+                showPopup(employee, result.time, (action === 'clockIn' ? 'เข้างาน' : 'เลิกงาน'), result.location);
+                clearForm();
+            } else {
+                showNotification(`⚠️ ${result.message}`);
+                clearForm();
+            }
+        } catch (error) {
+            showLoading(false);
+            if (error.name !== 'AbortError' && !(error instanceof DOMException && error.message.includes('permission'))) {
+                showNotification(`⚠️ เกิดข้อผิดพลาด: ${error.message}`);
+            }
+        }
+    }
+
+    async function ClockIn() { await handleClocking('clockIn'); }
+    async function ClockOut() { await handleClocking('clockOut'); }
+
+    async function getlocation() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          return reject(new DOMException("เบราว์เซอร์ของคุณไม่รองรับการระบุตำแหน่ง (Geolocation)"));
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            if (!latitude || !longitude) {
+               return reject(new DOMException("ได้รับค่าตำแหน่งที่ไม่ถูกต้อง"));
+            }
+            resolve([latitude, longitude]);
+          },
+          (err) => reject(err),
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+        );
+      }).catch(err => {
         let title, htmlContent;
         const isLineBrowser = navigator.userAgent.toLowerCase().includes("line");
+        const baseInstructions = 'คุณต้องอนุญาตให้เบราว์เซอร์เข้าถึงตำแหน่งของคุณ<br><br><strong>วิธีแก้ไข:</strong><br>1. ไปที่ <b>การตั้งค่า (Settings)</b> ของเบราว์เซอร์<br>2. มองหา <b>การตั้งค่าเว็บไซต์ (Site settings)</b><br>3. เลือก <b>ตำแหน่ง (Location)</b><br>4. อนุญาตให้เว็บนี้เข้าถึงตำแหน่งได้';
+
         switch (err.code) {
-          case 1: title = "คุณปฏิเสธการเข้าถึงตำแหน่ง"; htmlContent = isLineBrowser ? `<div style="text-align: left; padding: 10px;"><p>คุณได้ปิดกั้นการขอตำแหน่ง (GPS) ในเบราว์เซอร์ของ LINE</p><p><strong>วิธีแก้ไข:</strong></p><ol style="padding-left: 20px;"><li>แตะไอคอน <strong>"จุดสามจุด" (⋮)</strong> ที่มุมขวาล่าง</li><li>เลือก <strong>"การตั้งค่าเบราว์เซอร์"</strong></li><li>เลือก <strong>"ล้างข้อมูล"</strong> > ติ๊กเฉพาะ <strong>"สิทธิ์การเข้าถึงเว็บไซต์"</strong></li><li>กลับมาหน้านี้แล้ว<strong>โหลดใหม่</strong>เพื่อให้ระบบถามสิทธิ์อีกครั้ง</li></ol></div>` : `<div style="text-align: left; padding: 10px;"><p>คุณได้ปิดกั้นการขอตำแหน่ง (GPS)</p><p><strong>วิธีแก้ไข (Chrome):</strong></p><ol style="padding-left: 20px;"><li>แตะไอคอน 🔒 (แม่กุญแจ) ที่แถบที่อยู่</li><li>เลือก <strong>"สิทธิ์ของเว็บไซต์"</strong></li><li>มองหา <strong>"ตำแหน่ง"</strong> แล้วเปลี่ยนเป็น <strong>"อนุญาต"</strong></li><li>กลับมาหน้านี้แล้วโหลดใหม่</li></ol></div>`; break;
-          case 2: title = "ไม่สามารถระบุตำแหน่งได้"; htmlContent = "อาจเกิดจากสัญญาณ GPS อ่อน หรือคุณอยู่ในอาคาร กรุณาลองอีกครั้งในที่โล่งแจ้ง"; break;
-          case 3: title = "หมดเวลาในการค้นหาตำแหน่ง"; htmlContent = "ใช้เวลาค้นหานานเกินไป กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตและสัญญาณ GPS"; break;
-          case 5: title = "ตำแหน่งที่ได้ไม่แม่นยำพอ"; htmlContent = `ระบบตรวจพบว่าตำแหน่งของคุณอาจคลาดเคลื่อนมากเกินไป (${err.message})`; break;
-          default: title = "เกิดข้อผิดพลาดเกี่ยวกับตำแหน่ง"; htmlContent = `กรุณาลองใหม่อีกครั้ง (${err.message})`;
+          case 1:
+            title = "คุณปฏิเสธการเข้าถึงตำแหน่ง";
+            htmlContent = isLineBrowser 
+              ? `คุณต้องอนุญาตให้ LINE เข้าถึงตำแหน่งได้<br><br><strong>วิธีแก้ไขในแอป LINE:</strong><br>1. ไปที่ <b>การตั้งค่า (Settings)</b> ของมือถือ<br>2. เลือก <b>แอปพลิเคชัน (Apps)</b> > <b>LINE</b><br>3. เลือก <b>การอนุญาต (Permissions)</b><br>4. เปิดใช้งาน <b>ตำแหน่ง (Location)</b>` 
+              : baseInstructions;
+            break;
+          case 2:
+            title = "ไม่สามารถระบุตำแหน่งได้";
+            htmlContent = "อาจเกิดจากสัญญาณ GPS อ่อน กรุณาตรวจสอบว่าได้เปิดบริการตำแหน่งบนมือถือแล้ว และลองอีกครั้งในที่โล่งแจ้ง";
+            break;
+          case 3:
+            title = "หมดเวลาในการค้นหาตำแหน่ง";
+            htmlContent = "ใช้เวลาค้นหานานเกินไป กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตและสัญญาณ GPS แล้วลองใหม่อีกครั้ง";
+            break;
+          default:
+            title = "เกิดข้อผิดพลาดเกี่ยวกับตำแหน่ง";
+            htmlContent = `กรุณาลองใหม่อีกครั้ง (Error: ${err.message})`;
         }
-        Swal.fire({ icon: 'warning', title: `⚠️ ${title}`, html: htmlContent, confirmButtonText: 'เข้าใจแล้ว', confirmButtonColor: '#d33' });
-      }
+        Swal.fire({ icon: 'warning', title: '⚠️ ' + title, html: `<div style="text-align: left; padding: 10px;">${htmlContent}</div>`, confirmButtonText: 'เข้าใจแล้ว', confirmButtonColor: '#d33' });
+        throw err;
+      });
+    }
 
-      const ui = {
-        // ... (โค้ดส่วนนี้เหมือนเดิม)
-        toggleButtons: (enabled) => { elements.clockInBtn.prop('disabled', !enabled); elements.clockOutBtn.prop('disabled', !enabled); },
-        showLoading: (isLoading) => { if (isLoading) { const message = typeof isLoading === 'string' ? isLoading : '<div class="spinner-border spinner-border-sm" role="status"></div> กำลังดำเนินการ...'; elements.message.html(message).removeClass('msgBg').addClass('alert-info'); } else { elements.message.html('☀️ ขอให้ทำงานอย่างมีความสุข').removeClass('alert-info').addClass('msgBg'); } },
-        showNotification: (message) => { elements.message.html(message).removeClass('msgBg').addClass('alert-info'); },
-        showPopup: (employee, time, status, location) => { Swal.fire({ icon: 'success', title: '✅ บันทึกเรียบร้อย', html: `<div style="text-align: left; padding: 0 1rem;"><p><strong>👤 ชื่อ:</strong> ${DOMPurify.sanitize(employee)}</p><p><strong>⏰ เวลา:</strong> ${time.replace(/<br>/g, ' ')}</p><p><strong>📋 สถานะ:</strong> ${DOMPurify.sanitize(status)}</p><p><strong>📍 ตำแหน่ง:</strong> ${DOMPurify.sanitize(location)}</p></div>`, confirmButtonText: 'ปิด', confirmButtonColor: '#28a745' }); }
-      };
+    function showTime() {
+      const date = new Date();
+      let h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
+      h = h < 10 ? "0" + h : h;
+      m = m < 10 ? "0" + m : m;
+      s = s < 10 ? "0" + s : s;
+      document.getElementById("MyClockDisplay").innerText = `${h}:${m}:${s}`;
+      setTimeout(showTime, 1000);
+    }
 
-      function init() {
-        elements.employeeSelect.select2({
-          theme: 'bootstrap-5',
-          placeholder: 'กรุณาเลือกพนักงาน',
-        }).on('change', function() {
-          localStorage.setItem('selectedEmployee', $(this).val());
-        });
+    showTime();
 
-        setInterval(() => {
-          const now = new Date();
-          const timeString = [now.getHours(), now.getMinutes(), now.getSeconds()].map(num => String(num).padStart(2, '0')).join(':');
-          elements.clockDisplay.text(timeString);
-        }, 1000);
-        
-        elements.clockInBtn.on('click', () => handleClocking('clockIn', 'เข้างาน'));
-        elements.clockOutBtn.on('click', () => handleClocking('clockOut', 'เลิกงาน'));
-        
-        ui.showLoading(false);
-        getEmployees();
-      }
+    function showNotification(message) {
+      $('#message').html(message);
+      $("#message").removeClass("msgBg").addClass("alert-info");
+    }
 
-      return { init };
-    })();
+    function clearForm() {
+      setTimeout(() => {
+        $('#message').html('☀️ ขอให้ทำงานอย่างมีความสุข');
+        $("#message").removeClass("alert-info").addClass("msgBg");
+      }, 5000);
+    }
 
-    $(document).ready(App.init);
+    function showPopup(employee, time, status, location) {
+      Swal.fire({
+        icon: 'success',
+        title: '✅ บันทึกเรียบร้อย',
+        html: `
+          <div style="text-align: left;">
+            <p><strong>👤 ชื่อ:</strong> ${sanitizeInput(employee)}</p>
+            <p><strong>⏰ เวลา:</strong> ${time.replace(/<br>/g, ' ')}</p>
+            <p><strong>📋 สถานะ:</strong> ${sanitizeInput(status)}</p>
+            <p><strong>📍 ตำแหน่ง:</strong> ${sanitizeInput(location)}</p>
+          </div>
+        `,
+        confirmButtonText: 'ปิด',
+        confirmButtonColor: '#28a745'
+      });
+    }
+
+    $("#employee").on("change", function () {
+      localStorage.setItem('selectedEmployee', this.value);
+    });
   </script>
 </body>
 </html>
