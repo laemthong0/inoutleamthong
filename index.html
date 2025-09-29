@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -232,8 +231,8 @@
         <label for="employee">
           👤 ชื่อพนักงาน
         </label>
-        <select class="form-control select2" id="employee">
-          <option value="" disabled selected>กำลังโหลดรายชื่อ...</option>
+        <select class="form-control" id="employee">
+          <option value="">กำลังโหลดรายชื่อ...</option>
         </select>
       </div>
       <div class="btn-action">
@@ -347,7 +346,7 @@
       getEmployees().then(() => {
         const savedEmployee = localStorage.getItem('selectedEmployee');
         if (savedEmployee) {
-          $('.select2').val(savedEmployee).trigger('change');
+          $('#employee').val(savedEmployee).trigger('change');
         }
       });
     });
@@ -428,12 +427,11 @@
       const employeeSelect = $("#employee");
       const currentValue = employeeSelect.val();
 
-      // Destroy existing Select2 instance to re-initialize it correctly
       if (employeeSelect.hasClass('select2-hidden-accessible')) {
           employeeSelect.select2('destroy');
       }
 
-      employeeSelect.empty().append('<option value="" disabled selected>พิมพ์เพื่อค้นหาพนักงาน...</option>');
+      employeeSelect.empty().append('<option></option>'); // Use an empty option for Select2 placeholder
       
       const newOptions = employees
         .filter(item => item && item[0] && item[0].trim() !== '')
@@ -446,10 +444,8 @@
         employeeSelect.append(new Option(option.text, option.value));
       });
       
-      // Initialize Select2 AFTER the options have been added to the DOM
       initSelect2(employeeSelect);
       
-      // Restore the previous selection if it exists in the new list
       if (currentValue && newOptions.some(opt => opt.value === currentValue)) {
           employeeSelect.val(currentValue).trigger('change');
       }
